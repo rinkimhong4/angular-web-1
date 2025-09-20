@@ -1,0 +1,53 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Welcome Back</h5>
+    </div>
+    <div class="modal-body">
+      <p>Sign in to your account</p>
+      <form>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Enter your email"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Enter your password"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="togglePassword"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-dark w-100 mb-2">Sign In</button>
+        <a href="#" class="text-danger p">Forgot password?</a>
+        <a href="#" class="text-danger">Forgot password?</a>
+      </form>
+      <p class="mt-3 text-muted">
+        Demo credentials: admin@stylehub.com / admin123
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a
+        class="btn btn-outline-primary"
+        [routerLink]="['/signup']"
+        data-bs-dismiss="modal"
+        >Sign Up</a
+      >
+    </div>
+  </div>
+</div>

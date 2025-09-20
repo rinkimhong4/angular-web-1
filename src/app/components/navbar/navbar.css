@@ -1,0 +1,93 @@
+/* Glassmorphism navbar */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Search box */
+.search-box input {
+  width: 250px;
+  border: 1px solid #e0e0e0;
+  box-shadow: none;
+}
+
+/* Icons */
+.nav-icon {
+  color: #000;
+  font-size: 18px;
+  position: relative;
+}
+
+.nav-icon:hover {
+  color: #ff4081;
+}
+
+/* Cart badge */
+.cart-badge {
+  top: -8px;
+  right: -8px;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+/* Dropdown hover effect */
+.dropdown-item:hover {
+  border-radius: 14px;
+  background-color: #ff4081;
+  color: #fff;
+}
+
+.cover-full {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Mobile sidebar */
+@media (max-width: 991.98px) {
+  .cover-full {
+    position: fixed;
+    top: 0;
+    right: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+    padding-top: 60px;
+    transition: right 0.3s ease;
+    z-index: 1050;
+  }
+
+  .cover-full.show {
+    right: 0;
+  }
+
+  .cover-full .dropdown-item {
+    padding: 15px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Icon hover background */
+.nav-icon {
+  color: #000;
+  font-size: 18px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: background 0.3s, color 0.3s;
+}
+
+.nav-icon:hover {
+  background-color: #ff4081;
+  color: #fff;
+}

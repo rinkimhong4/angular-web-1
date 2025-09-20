@@ -1,0 +1,81 @@
+<br /><br />
+<nav class="navbar navbar-expand-lg navbar-light glass-nav fixed-top">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand font-weight-bold text-dark" routerLink=""
+      >StyleHub</a
+    >
+    <!-- Toggler for mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menu Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link text-dark" routerLink="">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#">Women</a>
+        </li>
+        <li class="nav-item"><a class="nav-link text-dark" href="#">Men</a></li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#">Shoes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#">Accessories</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger font-weight-bold" href="#">Sale</a>
+        </li>
+      </ul>
+
+      <!-- Search -->
+      <form class="form-inline my-2 my-lg-0 mx-3 search-box">
+        <input
+          class="form-control rounded-pill pl-4 pr-4"
+          type="search"
+          placeholder="Search products..."
+        />
+      </form>
+
+      <!-- Icons -->
+      <div class="d-flex align-items-center">
+        <a href="#" class="nav-icon mx-2"><i class="far fa-heart"></i></a>
+        <a href="#" class="nav-icon mx-2 position-relative">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="badge badge-danger position-absolute cart-badge">3</span>
+        </a>
+        <!-- User icon with dropdown -->
+        <div class="btn-group ml-2">
+          <a
+            href="#"
+            class="nav-icon"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="far fa-user fa-lg"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right cover-full">
+            <a class="dropdown-item" type="button" routerLink="signin"
+              >Sign In</a
+            >
+            <a class="dropdown-item" type="button" routerLink="signup"
+              >Sign Up</a
+            >
+            <a class="dropdown-item" type="button" routerLink="profile"
+              >Profile</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

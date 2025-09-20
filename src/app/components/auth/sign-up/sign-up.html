@@ -1,0 +1,89 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <!-- Remove text-center from modal-body -->
+    <div class="modal-body">
+      <h5 class="modal-title mb-2">Create Account</h5>
+      <p class="mb-4">Join StyleHub today</p>
+
+      <form>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              placeholder="First name"
+            />
+          </div>
+          <div class="col">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              placeholder="Last name"
+            />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Enter your email"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Create a password"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="togglePassword"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label"
+            >Confirm Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            placeholder="Confirm your password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-dark w-100 mb-2">
+          Create Account
+        </button>
+
+        <p class="text-danger small">
+          By creating an account, you agree to our Terms of Service and Privacy
+          Policy
+        </p>
+      </form>
+    </div>
+    <div class="modal-footer justify-content-between">
+      <a
+        class="btn btn-outline-primary"
+        [routerLink]="['/signin']"
+        data-bs-dismiss="modal"
+        >Sign In</a
+      >
+    </div>
+  </div>
+</div>
