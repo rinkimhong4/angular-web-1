@@ -1,0 +1,73 @@
+.product-main-image {
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #333;
+}
+
+.rating-section .stars {
+  font-size: 1.2rem;
+}
+
+.product-info {
+  position: sticky;
+  top: 20px;
+}
+
+.price-section .current-price {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.price-section .original-price {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.stock-status .badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.product-details {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.shipping-info {
+  background-color: #e9ecef;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.reviews-container .review-card {
+  border-left: 4px solid #007bff;
+  background-color: #f8f9fa;
+}
+
+.review-stars {
+  font-size: 0.9rem;
+}
+
+.badge-outline {
+  background-color: transparent;
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+@media (max-width: 991.98px) {
+  .product-info {
+    position: static;
+  }
+
+  .product-title {
+    font-size: 2rem;
+  }
+}

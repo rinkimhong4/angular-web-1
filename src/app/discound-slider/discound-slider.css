@@ -1,0 +1,86 @@
+.banner {
+  background: linear-gradient(
+      to right,
+      rgba(252, 228, 236, 0.9),
+      rgba(248, 187, 208, 0.4)
+    ),
+    url("https://img.freepik.com/premium-photo/beauty-flower-face-woman-studio-natural-cosmetics-skincare-wellness-makeup-spring-art-girl-with-petals-spa-aesthetic-luxury-facial-self-love-gray-background_590464-139570.jpg?semt=ais_hybrid&w=740&q=80");
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: left;
+  position: relative;
+}
+
+.banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  z-index: 1;
+}
+
+.banner > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Main container background */
+.container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+.banner img {
+  border-radius: 16px;
+  width: 100%;
+  object-fit: cover;
+}
+.banner h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+.banner p {
+  color: #555;
+  margin-bottom: 20px;
+}
+.banner .btn {
+  background-color: #e91e63;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  color: #fff;
+}
+.product-card {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20px;
+}
+.product-card img {
+  width: 100px;
+  margin-bottom: 15px;
+}
+.product-card h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.product-card p {
+  font-size: 14px;
+  color: #666;
+}
+.product-card .btn {
+  background-color: #212529;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  padding: 8px 20px;
+}

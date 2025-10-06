@@ -1,2 +1,135 @@
 <!-- section -->
-<div class="container-fluid p-0 m-0"><app-hero-section></app-hero-section></div>
+<div class="container-fluid p-0 m-0 hero-section">
+  <app-hero-section></app-hero-section>
+</div>
+
+<!-- Discount Slider -->
+<div class="discount-slider">
+  <app-discound-slider></app-discound-slider>
+</div>
+
+<!-- Product Catalog -->
+<div id="products" class="container my-5" data-aos="fade-up">
+  <h2 class="text-center mb-4" data-aos="fade-down">Our Products</h2>
+
+  <!-- Filters -->
+  <div class="row mb-4" data-aos="fade-up" data-aos-delay="200">
+    <div class="col-md-12">
+      <div class="card" data-aos="zoom-in">
+        <div class="card-body">
+          <div class="row">
+            <!-- Search -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="search">Search Products</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="search"
+                  placeholder="Search by name or description..."
+                  [(ngModel)]="searchTerm"
+                  (input)="onSearchChange()"
+                />
+              </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select
+                  class="form-control"
+                  id="category"
+                  [(ngModel)]="selectedCategory"
+                  (change)="onCategoryChange()"
+                >
+                  <option value="">All Categories</option>
+                  <option
+                    *ngFor="let category of categories"
+                    [value]="category"
+                  >
+                    {{ category }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Price Range</label>
+                <div class="row">
+                  <div class="col-6">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Min"
+                      [(ngModel)]="priceRange.min"
+                      (input)="onPriceChange()"
+                    />
+                  </div>
+                  <div class="col-6">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Max"
+                      [(ngModel)]="priceRange.max"
+                      (input)="onPriceChange()"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <button
+                  class="btn btn-secondary btn-block"
+                  (click)="clearFilters()"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="row product-grid" data-aos="fade-up" data-aos-delay="400">
+    <div
+      class="col-md-3 mb-4"
+      *ngFor="let product of displayedProducts; let i = index"
+      data-aos="zoom-in"
+      [attr.data-aos-delay]="i * 100"
+    >
+      <app-product-card
+        [product]="product"
+        (productClick)="viewProduct($event)"
+      >
+      </app-product-card>
+    </div>
+  </div>
+
+  <!-- Show More Button -->
+  <div
+    class="text-center mb-4"
+    *ngIf="!showAllProducts && filteredProducts.length > initialDisplayCount"
+  >
+    <button class="btn btn-primary btn-lg" (click)="showMoreProducts()">
+      <i class="fas fa-plus-circle mr-2"></i>Show More Products
+    </button>
+  </div>
+
+  <!-- No products found -->
+  <div *ngIf="filteredProducts.length === 0" class="text-center">
+    <p class="text-muted">No products found matching your filters.</p>
+    <button class="btn btn-primary" (click)="clearFilters()">
+      Clear Filters
+    </button>
+  </div>
+</div>

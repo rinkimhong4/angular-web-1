@@ -1,34 +1,81 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { CartService } from '../service/cart-service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
+export class Navbar implements OnInit, OnDestroy {
   isSidebarOpen = false;
+  cartItemCount = 0;
+  private subscription: Subscription = new Subscription();
+
+  constructor(private cartService: CartService) {}
+
+  ngOnInit() {
+    this.subscription = this.cartService.cartItems$.subscribe((items) => {
+      this.cartItemCount = this.cartService.getItemCount();
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   toggleSidebar(event: Event) {
     event.preventDefault();
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  // Close sidebar when clicking outside
+  closeMobileNavbar() {
+    // Close navbar collapse on mobile when clicking navigation links
+    if (window.innerWidth < 992) {
+      // Only on mobile/tablet
+      const navbarCollapse = document.querySelector('#navbarNav');
+      if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+        // Use Bootstrap's collapse method to close
+        const bsCollapse = (window as any).$ || (window as any).jQuery;
+        if (bsCollapse) {
+          bsCollapse(navbarCollapse).collapse('hide');
+        } else {
+          // Fallback: manually remove show class
+          navbarCollapse.classList.remove('show');
+        }
+      }
+    }
+  }
+
+  // Close navbar collapse when clicking outside
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     const target = event.target as HTMLElement;
-    const sidebar = document.querySelector('.cover-full');
-    const userIcon = document.querySelector('.btn-group .nav-icon');
+    const navbarCollapse = document.querySelector('#navbarNav');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
 
+    // Close navbar collapse on mobile when clicking outside
     if (
-      sidebar &&
-      userIcon &&
-      !sidebar.contains(target) &&
-      !userIcon.contains(target)
+      navbarCollapse &&
+      navbarToggler &&
+      window.innerWidth < 992 && // Only on mobile/tablet
+      !navbarCollapse.contains(target) &&
+      !navbarToggler.contains(target) &&
+      (!dropdownMenu || !dropdownMenu.contains(target)) && // Don't close if clicking in dropdown
+      navbarCollapse.classList.contains('show') // Only if it's open
     ) {
-      this.isSidebarOpen = false;
+      // Use Bootstrap's collapse method to close
+      const bsCollapse = (window as any).$ || (window as any).jQuery;
+      if (bsCollapse) {
+        bsCollapse(navbarCollapse).collapse('hide');
+      } else {
+        // Fallback: manually remove show class
+        navbarCollapse.classList.remove('show');
+      }
     }
   }
 }

@@ -1,0 +1,53 @@
+<div class="card h-100 clickable-card" (click)="onCardClick()">
+  <div class="position-relative">
+    <img
+      [src]="product.thumbnail"
+      class="card-img-top product-image"
+      [alt]="product.title"
+      style="height: 200px; object-fit: cover"
+    />
+    <!-- Discount Badge -->
+    <div *ngIf="product.discountPercentage > 0" class="discount-badge">
+      {{ product.discountPercentage }}% OFF
+    </div>
+  </div>
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title">{{ product.title }}</h5>
+
+    <!-- Star Rating -->
+    <div class="mb-2">
+      <div class="star-rating" *ngIf="product.rating">
+        <span class="stars">
+          <i
+            *ngFor="let star of getStars(product.rating)"
+            [class]="
+              star ? 'fas fa-star text-warning' : 'far fa-star text-warning'
+            "
+          ></i>
+        </span>
+        <span class="rating-text ml-1 text-muted">{{ product.rating }}</span>
+      </div>
+    </div>
+
+    <p class="card-text text-muted small">
+      {{ product.description }}
+    </p>
+
+    <!-- Price Section -->
+    <div class="price-section">
+      <p class="card-text mb-0">
+        <strong class="current-price"
+          >${{
+            (product.price * (1 - product.discountPercentage / 100)).toFixed(2)
+          }}</strong
+        >
+        <span
+          *ngIf="product.discountPercentage > 0"
+          class="original-price ml-2"
+        >
+          <s>${{ product.price }}</s>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>

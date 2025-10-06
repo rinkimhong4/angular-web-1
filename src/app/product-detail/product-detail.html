@@ -1,0 +1,264 @@
+<div class="container my-5" *ngIf="!loading; else loadingTemplate">
+  <button class="btn btn-secondary mb-3" (click)="goBack()">
+    ← Back to Products
+  </button>
+
+  <div class="row" *ngIf="product">
+    <!-- Product Images -->
+    <div class="col-lg-6 mb-4">
+      <div class="product-image-gallery">
+        <div id="productCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <div
+              class="carousel-item active"
+              *ngFor="let image of product.images; let i = index"
+              [class.active]="i === 0"
+            >
+              <img
+                [src]="image"
+                [alt]="product.title"
+                class="d-block w-100 product-main-image"
+              />
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-target="#productCarousel"
+            data-slide="prev"
+            *ngIf="product.images.length > 1"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-target="#productCarousel"
+            data-slide="next"
+            *ngIf="product.images.length > 1"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Information -->
+    <div class="col-lg-6">
+      <div class="product-info">
+        <!-- Header -->
+        <div class="mb-3">
+          <span class="badge badge-secondary">{{ product.category }}</span>
+          <span class="badge badge-info ml-2" *ngIf="product.brand">{{
+            product.brand
+          }}</span>
+        </div>
+
+        <h1 class="product-title mb-3">{{ product.title }}</h1>
+
+        <!-- Rating -->
+        <div class="rating-section mb-3">
+          <div class="stars mb-2">
+            <i
+              *ngFor="let star of getStars(product.rating)"
+              [class]="
+                star ? 'fas fa-star text-warning' : 'far fa-star text-warning'
+              "
+            ></i>
+            <span class="rating-number ml-2">{{ product.rating }}</span>
+            <small class="text-muted ml-2"
+              >({{ product.reviews.length }} reviews)</small
+            >
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="price-section mb-4">
+          <h2 class="current-price text-primary mb-0">
+            ${{
+              (product.price * (1 - product.discountPercentage / 100)).toFixed(
+                2
+              )
+            }}
+          </h2>
+          <div *ngIf="product.discountPercentage > 0" class="original-price">
+            <span class="text-muted"
+              ><s>${{ product.price }}</s></span
+            >
+            <span class="badge badge-success ml-2"
+              >{{ product.discountPercentage }}% OFF</span
+            >
+          </div>
+        </div>
+
+        <!-- Stock Status -->
+        <div class="stock-status mb-3">
+          <span
+            class="badge"
+            [class]="getStockStatusClass(product.availabilityStatus)"
+          >
+            {{ product.availabilityStatus }}
+          </span>
+          <small class="text-muted ml-2">{{ product.stock }} in stock</small>
+        </div>
+
+        <!-- Description -->
+        <div class="description mb-4">
+          <h5>Description</h5>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Tags -->
+        <div class="tags mb-4" *ngIf="product.tags.length > 0">
+          <h6>Tags:</h6>
+          <span
+            class="badge badge-outline mr-1 mb-1"
+            *ngFor="let tag of product.tags"
+            >{{ tag }}</span
+          >
+        </div>
+
+        <!-- Add to Cart -->
+        <div class="action-buttons mb-4">
+          <button
+            class="btn btn-success btn-lg btn-block"
+            (click)="addToCart()"
+            [disabled]="product.stock === 0"
+          >
+            <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+          </button>
+        </div>
+
+        <!-- Product Details -->
+        <div class="product-details">
+          <h5>Product Details</h5>
+          <div class="row">
+            <div class="col-sm-6">
+              <p><strong>SKU:</strong> {{ product.sku }}</p>
+              <p><strong>Weight:</strong> {{ product.weight }}g</p>
+              <p>
+                <strong>Minimum Order:</strong>
+                {{ product.minimumOrderQuantity }}
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <p><strong>Dimensions:</strong></p>
+              <small
+                >{{ product.dimensions.width }} ×
+                {{ product.dimensions.height }} ×
+                {{ product.dimensions.depth }} cm</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping & Warranty -->
+        <div class="shipping-info mt-4 pt-3 border-top">
+          <div class="row">
+            <div class="col-sm-6">
+              <h6>
+                <i class="fas fa-shipping-fast text-primary mr-2"></i>Shipping
+              </h6>
+              <p class="small">{{ product.shippingInformation }}</p>
+            </div>
+            <div class="col-sm-6">
+              <h6>
+                <i class="fas fa-shield-alt text-success mr-2"></i>Warranty
+              </h6>
+              <p class="small">{{ product.warrantyInformation }}</p>
+            </div>
+          </div>
+          <div class="mt-2">
+            <small class="text-muted"
+              ><i class="fas fa-undo mr-1"></i>{{ product.returnPolicy }}</small
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews Section -->
+  <div
+    class="row mt-5"
+    *ngIf="product && product.reviews && product.reviews.length > 0"
+  >
+    <div class="col-12">
+      <h3 class="mb-4">Customer Reviews</h3>
+      <div class="reviews-container">
+        <div class="review-card mb-3" *ngFor="let review of product.reviews">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-start mb-2"
+              >
+                <div>
+                  <h6 class="mb-1">{{ review.reviewerName }}</h6>
+                  <small class="text-muted">{{
+                    review.date | date : "mediumDate"
+                  }}</small>
+                </div>
+                <div class="review-stars">
+                  <i
+                    *ngFor="let star of getStars(review.rating)"
+                    [class]="
+                      star
+                        ? 'fas fa-star text-warning'
+                        : 'far fa-star text-warning'
+                    "
+                  ></i>
+                </div>
+              </div>
+              <p class="mb-0">{{ review.comment }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code & Barcode -->
+  <div class="row mt-4" *ngIf="product && product.meta">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">Product QR Code</h6>
+        </div>
+        <div class="card-body text-center">
+          <img
+            [src]="product.meta.qrCode"
+            alt="QR Code"
+            class="img-fluid"
+            style="max-width: 150px"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">Barcode</h6>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">
+            <strong>{{ product.meta.barcode }}</strong>
+          </p>
+          <small class="text-muted">
+            Created: {{ product.meta.createdAt | date : "medium" }}<br />
+            Updated: {{ product.meta.updatedAt | date : "medium" }}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="container my-5 text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>
