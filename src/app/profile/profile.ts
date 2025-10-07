@@ -1,6 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService, User } from '../service/auth-service';
+import { CartService } from '../service/cart-service';
+import { CartItem } from '../models/cart-item';
+import { Subscription } from 'rxjs';
+
+interface Order {
+  id: number;
+  item: string;
+  date: string;
+  status: string;
+}
+
+interface WishlistItem {
+  name: string;
+  price: number;
+  image: string;
+}
 
 @Component({
   selector: 'app-profile',
@@ -8,63 +25,78 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
-export class Profile implements OnInit {
+export class Profile implements OnInit, OnDestroy {
+  currentUser: User | null = null;
+  private subscription: Subscription = new Subscription();
+
   user = {
-    name: 'Emma Johnson',
-    email: 'emmaj@example.com',
-    points: 1250,
-    orders: [
-      {
-        id: 32456,
-        item: 'Summer Floral Dress',
-        date: 'Jun 12, 2023',
-        status: 'delivered',
-      },
-      {
-        id: 32455,
-        item: 'Denim Jacket & Slim Jeans',
-        date: 'Jun 5, 2023',
-        status: 'shipped',
-      },
-      {
-        id: 32450,
-        item: 'Designer Handbag',
-        date: 'May 28, 2023',
-        status: 'processing',
-      },
-    ],
-    wishlist: [
-      {
-        name: 'Leather Crossbody Bag',
-        price: 129.99,
-        image:
-          'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=436&q=80',
-      },
-      {
-        name: 'Silk Blouse',
-        price: 89.99,
-        image:
-          'https://images.unsplash.com/photo-1583744946564-b52ae1c1d5ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=437&q=80',
-      },
-      {
-        name: 'Casual Summer Dress',
-        price: 59.99,
-        image:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-      },
-    ],
-    address: '123 Fashion Street, New York, NY 10001',
-    phone: '+1 (555) 123-4567',
-    size: 'Medium',
-    style: 'Minimalist, Casual, occasionally Bohemian',
-    vipEvents: 3,
+    name: '',
+    email: '',
+    points: 0,
+    orders: [] as Order[],
+    wishlist: [] as WishlistItem[],
+    address: '',
+    phone: '',
+    size: '',
+    style: '',
+    vipEvents: 0,
+    profileImage: '',
   };
 
   activeTab: string = 'orders';
 
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private cartService: CartService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription = this.authService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+      if (user) {
+        // Load fresh user data from API to get real database data
+        this.loadUserProfile();
+        this.loadUserOrders(user.id);
+        this.loadCartItemsAsWishlist();
+      } else {
+        this.user.orders = [];
+        this.user.wishlist = [];
+      }
+    });
+  }
+
+  private loadUserProfile(): void {
+    this.authService.getMe().subscribe({
+      next: (userData) => {
+        // Update with real data from database
+        this.user.name = userData.username;
+        this.user.email = userData.email;
+        this.user.profileImage = userData.profileImage || '';
+      },
+      error: (error) => {
+        console.error('Error loading user profile', error);
+      },
+    });
+  }
+
+  private loadUserOrders(userId: string) {
+    const ordersKey = `user_orders_${userId}`;
+    const orders = JSON.parse(localStorage.getItem(ordersKey) || '[]');
+    this.user.orders = orders;
+  }
+
+  private loadCartItemsAsWishlist() {
+    const cartItems = this.cartService.getCartItems();
+    this.user.wishlist = cartItems.map((item) => ({
+      name: item.product.title,
+      price: item.product.price,
+      image: item.product.thumbnail || item.product.images?.[0] || '',
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   editProfile(): void {
     // Implement edit profile functionality
@@ -72,11 +104,37 @@ export class Profile implements OnInit {
   }
 
   saveSettings(): void {
-    // Implement save settings functionality
-    console.log('Settings saved', this.user);
+    if (this.currentUser) {
+      const updateData = {
+        username: this.user.name,
+        email: this.user.email,
+      };
+
+      console.log('Saving profile data:', {
+        username: updateData.username,
+        email: updateData.email,
+      });
+      console.log('Current user ID:', this.currentUser.id);
+
+      this.authService.updateProfile(updateData).subscribe({
+        next: (updatedUser) => {
+          console.log('Profile updated successfully', updatedUser);
+          // Reload profile data from API to ensure we have the latest
+          this.loadUserProfile();
+          alert('Profile updated successfully!');
+        },
+        error: (error) => {
+          console.error('Error updating profile', error);
+          console.error('Error details:', error.error);
+          alert(
+            'Error updating profile: ' + (error.error?.message || error.message)
+          );
+        },
+      });
+    }
   }
 
-  removeFromWishlist(item: any): void {
+  removeFromWishlist(item: WishlistItem): void {
     // Implement remove from wishlist functionality
     const index = this.user.wishlist.indexOf(item);
     if (index !== -1) {

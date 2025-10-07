@@ -5,8 +5,17 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart-service';
 import { CartItem } from '../models/cart-item';
+import { AuthService } from '../service/auth-service';
 
 declare var Swal: any;
+
+interface Order {
+  id: string;
+  item: string;
+  date: string;
+  status: string;
+  total: number;
+}
 
 @Component({
   selector: 'app-checkout',
@@ -29,9 +38,22 @@ export class Checkout implements OnInit, OnDestroy {
   orderId = '';
   private subscription: Subscription = new Subscription();
 
-  constructor(private cartService: CartService, private router: Router) {}
+  constructor(
+    private cartService: CartService,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
+    // Check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      // Navigate to sign-in with return URL
+      this.router.navigate(['/signin'], {
+        queryParams: { returnUrl: '/checkout' },
+      });
+      return;
+    }
+
     this.subscription = this.cartService.cartItems$.subscribe((items) => {
       this.cartItems = items;
       this.total = this.cartService.getTotal();
@@ -62,6 +84,19 @@ export class Checkout implements OnInit, OnDestroy {
     // Simulate order submission
     this.orderId =
       'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+    // Create order object
+    const order: Order = {
+      id: this.orderId,
+      item: orderItems.map((item) => item.product.title).join(', '),
+      date: new Date().toLocaleDateString(),
+      status: 'processing',
+      total: orderTotal,
+    };
+
+    // Save order to user's local storage
+    this.saveOrderToUserProfile(order);
+
     this.orderPlaced = true;
     this.cartService.clearCart();
 
@@ -70,6 +105,18 @@ export class Checkout implements OnInit, OnDestroy {
     this.cartItems = orderItems;
 
     Swal.fire('Success', 'Order placed successfully!', 'success');
+  }
+
+  private saveOrderToUserProfile(order: Order) {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      const ordersKey = `user_orders_${user.id}`;
+      const existingOrders = JSON.parse(
+        localStorage.getItem(ordersKey) || '[]'
+      );
+      existingOrders.push(order);
+      localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
+    }
   }
 
   goHome() {

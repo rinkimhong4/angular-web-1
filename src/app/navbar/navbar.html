@@ -101,27 +101,34 @@
             <i class="far fa-user fa-lg"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a
-              class="dropdown-item"
-              type="button"
-              routerLink="signin"
-              (click)="closeMobileNavbar()"
-              >Sign In</a
-            >
-            <a
-              class="dropdown-item"
-              type="button"
-              routerLink="signup"
-              (click)="closeMobileNavbar()"
-              >Sign Up</a
-            >
-            <a
-              class="dropdown-item"
-              type="button"
-              routerLink="profile"
-              (click)="closeMobileNavbar()"
-              >Profile</a
-            >
+            <ng-container *ngIf="!currentUser">
+              <a
+                class="dropdown-item"
+                type="button"
+                routerLink="signin"
+                (click)="closeMobileNavbar()"
+                >Sign In</a
+              >
+              <a
+                class="dropdown-item"
+                type="button"
+                routerLink="signup"
+                (click)="closeMobileNavbar()"
+                >Sign Up</a
+              >
+            </ng-container>
+            <ng-container *ngIf="currentUser">
+              <a
+                class="dropdown-item"
+                type="button"
+                routerLink="profile"
+                (click)="closeMobileNavbar()"
+                >Profile</a
+              >
+              <a class="dropdown-item" type="button" (click)="logout()"
+                >Logout</a
+              >
+            </ng-container>
           </div>
         </div>
       </div>

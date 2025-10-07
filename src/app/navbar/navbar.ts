@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart-service';
+import { AuthService, User } from '../service/auth-service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,15 +14,25 @@ import { CartService } from '../service/cart-service';
 export class Navbar implements OnInit, OnDestroy {
   isSidebarOpen = false;
   cartItemCount = 0;
+  currentUser: User | null = null;
   private subscription: Subscription = new Subscription();
 
-  constructor(private cartService: CartService) {}
+  constructor(
+    private cartService: CartService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.subscription = this.cartService.cartItems$.subscribe((items) => {
       // Count unique products, ignore quantity
       this.cartItemCount = items.length;
     });
+
+    this.subscription.add(
+      this.authService.currentUser$.subscribe((user) => {
+        this.currentUser = user;
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -49,6 +60,11 @@ export class Navbar implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.closeMobileNavbar();
   }
 
   // Close navbar collapse when clicking outside

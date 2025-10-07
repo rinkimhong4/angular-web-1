@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CartItem } from '../models/cart-item';
 import { Product } from '../models/product';
+import { AuthService } from './auth-service';
 declare const Swal: any;
 
 @Injectable({
@@ -10,14 +11,30 @@ declare const Swal: any;
 export class CartService {
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItems.asObservable();
-  private readonly CART_KEY = 'shopping_cart';
+  private readonly CART_KEY_PREFIX = 'shopping_cart_';
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.loadCartFromStorage();
+
+    // Subscribe to auth changes to load/save cart per user
+    this.authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.loadCartFromStorage();
+      } else {
+        this.clearCart();
+      }
+    });
+  }
+
+  private getCartKey(): string {
+    const user = this.authService.getCurrentUser();
+    return user
+      ? `${this.CART_KEY_PREFIX}${user.id}`
+      : this.CART_KEY_PREFIX + 'guest';
   }
 
   private loadCartFromStorage() {
-    const storedCart = localStorage.getItem(this.CART_KEY);
+    const storedCart = localStorage.getItem(this.getCartKey());
     if (storedCart) {
       try {
         const items = JSON.parse(storedCart) as CartItem[];
@@ -30,6 +47,8 @@ export class CartService {
         console.error('Error loading cart from localStorage:', error);
         this.cartItems.next([]);
       }
+    } else {
+      this.cartItems.next([]);
     }
   }
 
@@ -38,10 +57,17 @@ export class CartService {
     const validItems = this.cartItems.value.filter(
       (item) => item.quantity > 0 && item.product && item.product.id > 0
     );
-    localStorage.setItem(this.CART_KEY, JSON.stringify(validItems));
+    localStorage.setItem(this.getCartKey(), JSON.stringify(validItems));
   }
 
   addToCart(product: Product, quantity: number = 1) {
+    // Check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      // Navigate directly to register page
+      window.location.href = '/signup';
+      return;
+    }
+
     // Validate input quantity
     const validQuantity = Math.floor(Math.max(1, quantity));
     if (quantity !== validQuantity) {
@@ -183,7 +209,7 @@ export class CartService {
   /** Clear entire cart */
   clearCart() {
     this.cartItems.next([]);
-    localStorage.removeItem(this.CART_KEY);
+    localStorage.removeItem(this.getCartKey());
   }
 
   /** Check if cart is empty */
