@@ -28,6 +28,8 @@ interface WishlistItem {
 export class Profile implements OnInit, OnDestroy {
   currentUser: User | null = null;
   private subscription: Subscription = new Subscription();
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
 
   user = {
     name: '',
@@ -98,6 +100,13 @@ export class Profile implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      this.previewUrl = URL.createObjectURL(this.selectedFile);
+    }
+  }
+
   editProfile(): void {
     // Implement edit profile functionality
     console.log('Edit profile clicked');
@@ -105,22 +114,28 @@ export class Profile implements OnInit, OnDestroy {
 
   saveSettings(): void {
     if (this.currentUser) {
-      const updateData = {
-        username: this.user.name,
-        email: this.user.email,
-      };
+      const formData = new FormData();
+      formData.append('username', this.user.name);
+      formData.append('email', this.user.email);
+      if (this.selectedFile) {
+        formData.append('profileImage', this.selectedFile);
+      } else if (this.user.profileImage) {
+        formData.append('profileImage', this.user.profileImage);
+      }
 
-      console.log('Saving profile data:', {
-        username: updateData.username,
-        email: updateData.email,
-      });
+      console.log(
+        'Saving profile data with file:',
+        this.selectedFile ? 'yes' : 'no'
+      );
       console.log('Current user ID:', this.currentUser.id);
 
-      this.authService.updateProfile(updateData).subscribe({
+      this.authService.updateProfile(formData).subscribe({
         next: (updatedUser) => {
           console.log('Profile updated successfully', updatedUser);
           // Reload profile data from API to ensure we have the latest
           this.loadUserProfile();
+          this.selectedFile = null;
+          this.previewUrl = null;
           alert('Profile updated successfully!');
         },
         error: (error) => {

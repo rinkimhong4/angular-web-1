@@ -117,7 +117,7 @@ export class AuthService {
     return this.http.get<User>(`${this.apiUrl}/me`, { headers });
   }
 
-  updateProfile(data: Partial<User>): Observable<User> {
+  updateProfile(data: any): Observable<User> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.getToken()}`,
     });

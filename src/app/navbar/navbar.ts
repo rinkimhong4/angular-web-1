@@ -51,13 +51,13 @@ export class Navbar implements OnInit, OnDestroy {
       const navbarCollapse = document.querySelector('#navbarNav');
       if (navbarCollapse && navbarCollapse.classList.contains('show')) {
         // Use Bootstrap's collapse method to close
-        const bsCollapse = (window as any).$ || (window as any).jQuery;
-        if (bsCollapse) {
-          bsCollapse(navbarCollapse).collapse('hide');
-        } else {
-          // Fallback: manually remove show class
-          navbarCollapse.classList.remove('show');
-        }
+        // const bsCollapse = (window as any).$ || (window as any).jQuery;
+        // if (bsCollapse) {
+        //   bsCollapse(navbarCollapse).collapse('hide');
+        // } else {
+        //   // Fallback: manually remove show class
+        //   navbarCollapse.classList.remove('show');
+        // }
       }
     }
   }
