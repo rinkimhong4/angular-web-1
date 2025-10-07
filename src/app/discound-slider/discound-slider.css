@@ -32,7 +32,6 @@
 
 /* Main container background */
 .container {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 20px;
   padding: 20px;
   margin-bottom: 30px;

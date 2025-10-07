@@ -4,7 +4,6 @@ import { App } from './app/app';
 
 bootstrapApplication(App, appConfig).catch((err) => console.error(err));
 
-// Initialize GSAP ScrollTrigger and ScrollReveal
 declare var gsap: any;
 declare var ScrollTrigger: any;
 declare var ScrollReveal: any;
@@ -14,7 +13,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
 
   // GSAP ScrollTrigger animations
   gsap.from('.hero-section', {
-    duration: 1.5,
+    duration: 0.6,
     y: 100,
     opacity: 0,
     ease: 'power2.out',
@@ -23,11 +22,12 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       start: 'top 80%',
       end: 'bottom 20%',
       toggleActions: 'play none none reverse',
+      invalidateOnRefresh: false,
     },
   });
 
   gsap.from('.discount-slider', {
-    duration: 1.2,
+    duration: 0.7,
     scale: 0.8,
     opacity: 0,
     ease: 'back.out(1.7)',
@@ -36,11 +36,12 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       start: 'top 85%',
       end: 'bottom 15%',
       toggleActions: 'play none none reverse',
+      invalidateOnRefresh: false,
     },
   });
 
   gsap.from('.product-grid .col-md-3', {
-    duration: 0.8,
+    duration: 0.5,
     y: 50,
     opacity: 0,
     stagger: 0.1,
@@ -50,6 +51,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       start: 'top 80%',
       end: 'bottom 20%',
       toggleActions: 'play none none reverse',
+      invalidateOnRefresh: false,
     },
   });
 
@@ -62,6 +64,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       start: 'top bottom',
       end: 'bottom top',
       scrub: true,
+      invalidateOnRefresh: false,
     },
   });
 }

@@ -1,11 +1,16 @@
-<div class="container my-5" *ngIf="!loading; else loadingTemplate">
-  <button class="btn btn-secondary mb-3" (click)="goBack()">
+<div class="container my-5" data-aos="fade-in">
+  <button
+    class="btn btn-secondary mb-3"
+    (click)="goBack()"
+    data-aos="fade-right"
+    data-aos-delay="10"
+  >
     ← Back to Products
   </button>
 
   <div class="row" *ngIf="product">
     <!-- Product Images -->
-    <div class="col-lg-6 mb-4">
+    <div class="col-lg-6 mb-4" data-aos="fade-right" data-aos-delay="50">
       <div class="product-image-gallery">
         <div id="productCarousel" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner">
@@ -46,20 +51,26 @@
     </div>
 
     <!-- Product Information -->
-    <div class="col-lg-6">
+    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="75">
       <div class="product-info">
         <!-- Header -->
-        <div class="mb-3">
+        <div class="mb-3" data-aos="fade-up" data-aos-delay="100">
           <span class="badge badge-secondary">{{ product.category }}</span>
           <span class="badge badge-info ml-2" *ngIf="product.brand">{{
             product.brand
           }}</span>
         </div>
 
-        <h1 class="product-title mb-3">{{ product.title }}</h1>
+        <h1 class="product-title mb-3" data-aos="fade-up" data-aos-delay="125">
+          {{ product.title }}
+        </h1>
 
         <!-- Rating -->
-        <div class="rating-section mb-3">
+        <div
+          class="rating-section mb-3"
+          data-aos="fade-up"
+          data-aos-delay="150"
+        >
           <div class="stars mb-2">
             <i
               *ngFor="let star of getStars(product.rating)"
@@ -75,7 +86,7 @@
         </div>
 
         <!-- Price -->
-        <div class="price-section mb-4">
+        <div class="price-section mb-4" data-aos="fade-up" data-aos-delay="175">
           <h2 class="current-price text-primary mb-0">
             ${{
               (product.price * (1 - product.discountPercentage / 100)).toFixed(
@@ -94,7 +105,7 @@
         </div>
 
         <!-- Stock Status -->
-        <div class="stock-status mb-3">
+        <div class="stock-status mb-3" data-aos="fade-up" data-aos-delay="200">
           <span
             class="badge"
             [class]="getStockStatusClass(product.availabilityStatus)"
@@ -105,13 +116,18 @@
         </div>
 
         <!-- Description -->
-        <div class="description mb-4">
+        <div class="description mb-4" data-aos="fade-up" data-aos-delay="225">
           <h5>Description</h5>
           <p>{{ product.description }}</p>
         </div>
 
         <!-- Tags -->
-        <div class="tags mb-4" *ngIf="product.tags.length > 0">
+        <div
+          class="tags mb-4"
+          *ngIf="product.tags.length > 0"
+          data-aos="fade-up"
+          data-aos-delay="250"
+        >
           <h6>Tags:</h6>
           <span
             class="badge badge-outline mr-1 mb-1"
@@ -121,7 +137,11 @@
         </div>
 
         <!-- Add to Cart -->
-        <div class="action-buttons mb-4">
+        <div
+          class="action-buttons mb-4"
+          data-aos="zoom-in"
+          data-aos-delay="275"
+        >
           <button
             class="btn btn-success btn-lg btn-block"
             (click)="addToCart()"
@@ -132,7 +152,7 @@
         </div>
 
         <!-- Product Details -->
-        <div class="product-details">
+        <div class="product-details" data-aos="fade-up" data-aos-delay="300">
           <h5>Product Details</h5>
           <div class="row">
             <div class="col-sm-6">
@@ -155,7 +175,11 @@
         </div>
 
         <!-- Shipping & Warranty -->
-        <div class="shipping-info mt-4 pt-3 border-top">
+        <div
+          class="shipping-info mt-4 pt-3 border-top"
+          data-aos="fade-up"
+          data-aos-delay="325"
+        >
           <div class="row">
             <div class="col-sm-6">
               <h6>
@@ -184,11 +208,18 @@
   <div
     class="row mt-5"
     *ngIf="product && product.reviews && product.reviews.length > 0"
+    data-aos="fade-up"
+    data-aos-delay="350"
   >
     <div class="col-12">
       <h3 class="mb-4">Customer Reviews</h3>
       <div class="reviews-container">
-        <div class="review-card mb-3" *ngFor="let review of product.reviews">
+        <div
+          class="review-card mb-3"
+          *ngFor="let review of product.reviews; let i = index"
+          [attr.data-aos]="'fade-up'"
+          [attr.data-aos-delay]="375 + i * 25"
+        >
           <div class="card">
             <div class="card-body">
               <div
@@ -220,8 +251,13 @@
   </div>
 
   <!-- QR Code & Barcode -->
-  <div class="row mt-4" *ngIf="product && product.meta">
-    <div class="col-md-6">
+  <div
+    class="row mt-4"
+    *ngIf="product && product.meta"
+    data-aos="fade-up"
+    data-aos-delay="400"
+  >
+    <div class="col-md-6" data-aos="zoom-in" data-aos-delay="425">
       <div class="card">
         <div class="card-header">
           <h6 class="mb-0">Product QR Code</h6>
@@ -236,7 +272,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" data-aos="zoom-in" data-aos-delay="450">
       <div class="card">
         <div class="card-header">
           <h6 class="mb-0">Barcode</h6>

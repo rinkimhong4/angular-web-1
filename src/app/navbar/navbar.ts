@@ -19,7 +19,8 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.cartService.cartItems$.subscribe((items) => {
-      this.cartItemCount = this.cartService.getItemCount();
+      // Count unique products, ignore quantity
+      this.cartItemCount = items.length;
     });
   }
 

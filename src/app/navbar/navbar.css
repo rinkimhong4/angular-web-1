@@ -40,6 +40,11 @@
   color: #fff;
 }
 
+/* Nav link hover underline */
+.nav-link:hover {
+  text-decoration: underline;
+}
+
 .cover-full {
   background: transparent !important;
   border: none !important;

@@ -6,7 +6,7 @@
   <div class="container">
     <!-- Logo -->
     <a class="navbar-brand font-weight-bold text-dark" routerLink=""
-      >StyleHub</a
+      >Majestic Glow</a
     >
     <!-- Toggler for mobile -->
     <button
@@ -73,6 +73,7 @@
         <a href="#" class="nav-icon mx-2" (click)="closeMobileNavbar()"
           ><i class="far fa-heart"></i
         ></a>
+
         <a
           routerLink="/cart"
           class="nav-icon mx-2 position-relative"
@@ -82,9 +83,11 @@
           <span
             class="badge badge-danger position-absolute cart-badge"
             *ngIf="cartItemCount > 0"
-            >{{ cartItemCount }}</span
           >
+            {{ cartItemCount }}
+          </span>
         </a>
+
         <!-- User icon with dropdown -->
         <div class="btn-group ml-2">
           <a

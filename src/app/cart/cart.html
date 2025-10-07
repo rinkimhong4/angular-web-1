@@ -38,23 +38,31 @@
             </div>
 
             <!-- Quantity Controls -->
-            <div class="col-md-3">
-              <div class="input-group input-group-sm">
+            <div class="col-md-3 py-2">
+              <div class="d-flex align-items-center">
+                <!-- Decrease Button -->
                 <button
-                  class="btn btn-outline-secondary"
+                  class="btn btn-outline-danger"
                   (click)="decreaseQuantity(item)"
+                  type="button"
                 >
                   <i class="bi bi-dash"></i>
                 </button>
+
+                <!-- Quantity Input -->
                 <input
                   type="text"
-                  class="form-control text-center border-0 bg-light"
+                  class="form-control text-center border-0 bg-light mx-2"
                   [value]="item.quantity"
                   readonly
+                  style="width: 60px"
                 />
+
+                <!-- Increase Button -->
                 <button
-                  class="btn btn-outline-secondary"
+                  class="btn btn-outline-primary"
                   (click)="increaseQuantity(item)"
+                  type="button"
                 >
                   <i class="bi bi-plus"></i>
                 </button>
@@ -73,7 +81,7 @@
             <!-- Remove -->
             <div class="col-md-1 text-end">
               <button
-                class="btn btn-sm btn-outline-danger"
+                class="btn btn-outline-danger"
                 (click)="removeItem(item.product.id)"
               >
                 <i class="bi bi-trash"></i>
@@ -107,14 +115,14 @@
           </div>
 
           <button
-            class="btn btn-success w-100 mt-3 fw-semibold"
+            class="btn btn-primary w-100 mt-3 fw-semibold"
             (click)="checkout()"
           >
             Proceed to Checkout
           </button>
 
           <button
-            class="btn btn-outline-secondary w-100 mt-2"
+            class="btn btn-outline-success w-100 mt-2"
             (click)="continueShopping()"
           >
             Continue Shopping
