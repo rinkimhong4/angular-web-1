@@ -19,7 +19,6 @@
 }
 
 .profile-header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
   color: black;
   padding: 2rem;
   position: relative;
