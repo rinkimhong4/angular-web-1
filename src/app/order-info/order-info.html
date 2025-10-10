@@ -2,18 +2,18 @@
   <div class="card">
     <div class="card-header bg-primary text-white text-center">
       <h2>RinCommerce</h2>
-      <h4>Invoice</h4>
+      <h4>Order Information</h4>
     </div>
     <div class="card-body">
       <div class="row">
         <div class="col-md-6">
-          <h5>Invoice Details</h5>
-          <p><strong>Invoice Number:</strong> {{ order._id }}</p>
+          <h5>Order Details</h5>
+          <p><strong>Order Number:</strong> {{ order._id }}</p>
           <p><strong>Date:</strong> {{ order.date }}</p>
-          <p><strong>Payment Method:</strong> Credit Card</p>
+          <p><strong>Status:</strong> {{ order.status | titlecase }}</p>
         </div>
         <div class="col-md-6">
-          <h5>Bill To:</h5>
+          <h5>Customer Information</h5>
           <p><strong>Name:</strong> {{ order.customer.name }}</p>
           <p><strong>Email:</strong> {{ order.customer.email }}</p>
           <p><strong>Address:</strong> {{ order.customer.address }}</p>
@@ -23,8 +23,8 @@
       <table class="table table-bordered mt-4">
         <thead>
           <tr>
-            <th>Item</th>
-            <th>Qty</th>
+            <th>Product</th>
+            <th>Quantity</th>
             <th>Price</th>
             <th>Total</th>
           </tr>

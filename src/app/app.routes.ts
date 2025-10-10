@@ -7,12 +7,14 @@ import { ProductDetail } from './product-detail/product-detail';
 import { Cart } from './cart/cart';
 import { Checkout } from './checkout/checkout';
 import { Download } from './download/download';
+// import { OrderInfo } from './order-info/order-info';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'product/:id', component: ProductDetail },
   { path: 'cart', component: Cart },
   { path: 'checkout', component: Checkout },
   { path: 'download', component: Download },
+  // { path: 'order-info', component: OrderInfo },
   { path: 'signin', component: SignIn },
   { path: 'signup', component: SignUp },
   { path: 'profile', component: Profile },

@@ -8,10 +8,16 @@ import { CartItem } from '../models/cart-item';
 import { Subscription } from 'rxjs';
 
 interface Order {
-  id: number;
+  id: string;
   item: string;
+  customer: {
+    name: string;
+    email: string;
+    address: string;
+  };
   date: string;
   status: string;
+  total: number;
 }
 
 interface WishlistItem {
@@ -89,8 +95,10 @@ export class Profile implements OnInit, OnDestroy {
         this.user.orders = orders.map((order) => ({
           id: order._id,
           item: order.items.map((i: any) => i.product.title).join(', '),
+          customer: order.customer,
           date: order.date,
           status: order.status,
+          total: order.total,
         }));
       },
       error: (err) => {
@@ -175,7 +183,9 @@ export class Profile implements OnInit, OnDestroy {
   }
 
   viewOrder(order: Order): void {
-    this.router.navigate(['/download'], { queryParams: { orderId: order.id } });
+    this.router.navigate(['/download'], {
+      queryParams: { orderId: order.id },
+    });
   }
 
   getOrderStatusClass(status: string): string {

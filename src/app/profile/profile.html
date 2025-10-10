@@ -43,52 +43,30 @@
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Tabs -->
-          <ul class="nav nav-tabs justify-content-center" role="tablist">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [class.active]="activeTab === 'orders'"
-                (click)="setActiveTab('orders')"
-                role="tab"
-              >
-                <i class="fas fa-shopping-bag me-2"></i>Orders
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [class.active]="activeTab === 'wishlist'"
-                (click)="setActiveTab('wishlist')"
-                role="tab"
-              >
-                <i class="fas fa-heart me-2"></i>Wishlist
-              </a>
-            </li>
-          </ul>
-
-          <div class="tab-content p-3">
-            <!-- Orders Tab -->
-            <div *ngIf="activeTab === 'orders'" role="tabpanel">
-              <h5 class="mb-4">Recent Orders</h5>
+            <!-- Order Confirmations
+            <div class="recent-orders mt-4" *ngIf="user.orders.length > 0">
+              <h5 class="mb-3">Order Confirmations</h5>
               <div
-                class="order-item p-3"
-                *ngFor="let order of user.orders"
+                class="order-item p-2 mb-2"
+                *ngFor="let order of user.orders.slice(0, 3)"
                 (click)="viewOrder(order)"
-                style="cursor: pointer"
+                style="
+                  cursor: pointer;
+                  border: 1px solid #ddd;
+                  border-radius: 5px;
+                "
               >
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6 class="mb-1">{{ order.item }}</h6>
-                    <p class="mb-0 text-muted">
-                      Order #{{ order.id }} • Placed on {{ order.date }}
+                    <h6 class="mb-1">{{ order.customer.name }}</h6>
+                    <p class="mb-0 text-muted small">
+                      Order #{{ order.id }} • {{ order.date }}
                     </p>
                   </div>
                   <div>
                     <span
-                      class="order-status"
+                      class="order-status badge"
                       [ngClass]="getOrderStatusClass(order.status)"
                     >
                       {{ order.status | titlecase }}
@@ -96,30 +74,94 @@
                   </div>
                 </div>
               </div>
-              <div class="text-center mt-4">
-                <button class="btn btn-outline-primary">View All Orders</button>
-              </div>
-            </div>
-
-            <!-- Wishlist Tab -->
-            <div *ngIf="activeTab === 'wishlist'" role="tabpanel">
-              <h5 class="mb-4">My Wishlist</h5>
-              <div class="wishlist-item" *ngFor="let item of user.wishlist">
-                <img [src]="item.image" alt="Product" class="wishlist-img" />
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">{{ item.name }}</h6>
-                  <p class="mb-0 text-muted">${{ item.price | number }}</p>
-                </div>
-                <button
-                  class="btn btn-outline-danger btn-sm"
-                  (click)="removeFromWishlist(item)"
-                >
-                  <i class="fas fa-trash"></i>
+              <div class="text-center">
+                <button class="btn btn-link" (click)="setActiveTab('orders')">
+                  View All Confirmations
                 </button>
               </div>
-              <div class="empty-state" *ngIf="user.wishlist.length === 0">
-                <i class="fas fa-heart"></i>
-                <p>Your wishlist is empty</p>
+            </div> -->
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs justify-content-center" role="tablist">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [class.active]="activeTab === 'orders'"
+                  (click)="setActiveTab('orders')"
+                  role="tab"
+                >
+                  <i class="fas fa-shopping-bag me-2"></i>Order Cnfirmations
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [class.active]="activeTab === 'wishlist'"
+                  (click)="setActiveTab('wishlist')"
+                  role="tab"
+                >
+                  <i class="fas fa-heart me-2"></i>Wishlist
+                </a>
+              </li>
+            </ul>
+
+            <div class="tab-content p-3">
+              <!-- Orders Tab -->
+              <div *ngIf="activeTab === 'orders'" role="tabpanel">
+                <h5 class="mb-4">Order Confimations</h5>
+                <div class="wishlist-item" *ngFor="let order of user.orders">
+                  <div
+                    class="wishlist-img"
+                    style="
+                      background: #f8f9fa;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 24px;
+                    "
+                  >
+                    📄
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1">Order #{{ order.id }}</h6>
+                    <p class="mb-0 text-muted">
+                      {{ order.item }} • ${{ order.total }}
+                    </p>
+                  </div>
+                  <button
+                    class="btn btn-outline-primary btn-sm"
+                    (click)="viewOrder(order)"
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+                <div class="text-center mt-4">
+                  <button class="btn btn-outline-primary">
+                    View All Confirmations
+                  </button>
+                </div>
+              </div>
+
+              <!-- Wishlist Tab -->
+              <div *ngIf="activeTab === 'wishlist'" role="tabpanel">
+                <h5 class="mb-4">My Wishlist</h5>
+                <div class="wishlist-item" *ngFor="let item of user.wishlist">
+                  <img [src]="item.image" alt="Product" class="wishlist-img" />
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1">{{ item.name }}</h6>
+                    <p class="mb-0 text-muted">${{ item.price | number }}</p>
+                  </div>
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="removeFromWishlist(item)"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                <div class="empty-state" *ngIf="user.wishlist.length === 0">
+                  <i class="fas fa-heart"></i>
+                  <p>Your wishlist is empty</p>
+                </div>
               </div>
             </div>
           </div>
