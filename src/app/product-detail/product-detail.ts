@@ -41,7 +41,7 @@ export class ProductDetail implements OnInit {
   addToCart() {
     if (this.product) {
       this.cartService.addToCart(this.product);
-      Swal.fire('Success', 'Product added to cart!', 'success');
+      // Swal.fire('Success', 'Product added to cart!', 'success');
     }
   }
 

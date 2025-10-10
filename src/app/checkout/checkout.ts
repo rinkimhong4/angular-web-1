@@ -3,21 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CartService } from '../service/cart-service';
 import { CartItem } from '../models/cart-item';
 import { AuthService } from '../service/auth-service';
 import { UsdToKhrPipe } from '../pipes/usd-to-khr-pipe';
 
 declare var Swal: any;
-
-interface Order {
-  id: string;
-  customer: any;
-  items: CartItem[];
-  date: string;
-  status: string;
-  total: number;
-}
 
 @Component({
   selector: 'app-checkout',
@@ -43,7 +35,8 @@ export class Checkout implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -83,43 +76,57 @@ export class Checkout implements OnInit, OnDestroy {
     const orderTotal = this.total;
     const orderItems = [...this.cartItems];
 
-    // Simulate order submission
-    this.orderId =
-      'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-
-    // Create order object
-    const order: Order = {
-      id: this.orderId,
-      customer: { ...this.customer },
-      items: [...orderItems],
-      date: new Date().toLocaleDateString(),
+    // Prepare order data for API
+    const orderData = {
+      customer: {
+        name: this.customer.name,
+        email: this.customer.email,
+        address: this.customer.address,
+      },
+      items: this.cartItems.map((item) => ({
+        product: {
+          title: item.product.title,
+          price: item.product.price,
+        },
+        quantity: item.quantity,
+      })),
+      total: this.total,
+      date: new Date().toISOString().split('T')[0],
       status: 'processing',
-      total: orderTotal,
     };
 
-    // Save order to user's local storage
-    this.saveOrderToUserProfile(order);
+    // Set headers with authorization
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
 
-    this.orderPlaced = true;
-    this.cartService.clearCart();
+    // Submit order to API
+    this.http
+      .post('https://auth-api.rinkimhong.org/api/orders', orderData, {
+        headers,
+      })
+      .subscribe({
+        next: (response: any) => {
+          this.orderId = response._id;
+          this.orderPlaced = true;
+          this.cartService.clearCart();
 
-    // Keep the order details for invoice display
-    this.total = orderTotal;
-    this.cartItems = orderItems;
+          // Keep the order details for invoice display
+          this.total = orderTotal;
+          this.cartItems = orderItems;
 
-    Swal.fire('Success', 'Order placed successfully!', 'success');
-  }
-
-  private saveOrderToUserProfile(order: Order) {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      const ordersKey = `user_orders_${user.id}`;
-      const existingOrders = JSON.parse(
-        localStorage.getItem(ordersKey) || '[]'
-      );
-      existingOrders.push(order);
-      localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
-    }
+          Swal.fire('Success', 'Order placed successfully!', 'success');
+        },
+        error: (err) => {
+          console.error('Order submission error:', err);
+          Swal.fire(
+            'Error',
+            err.error?.message || 'Failed to place order. Please try again.',
+            'error'
+          );
+        },
+      });
   }
 
   goHome() {

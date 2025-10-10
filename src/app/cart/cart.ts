@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart-service';
 import { CartItem } from '../models/cart-item';
+import { UsdToKhrPipe } from '../pipes/usd-to-khr-pipe';
 
 @Component({
   selector: 'app-cart',
-  imports: [CommonModule],
+  imports: [CommonModule, UsdToKhrPipe],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
