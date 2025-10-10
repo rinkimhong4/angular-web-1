@@ -30,8 +30,8 @@ export interface LoginData {
   providedIn: 'root',
 })
 export class AuthService {
-  // private apiUrl = 'http://localhost:3000/api/auth';
-  private apiUrl = 'https://auth-api.rinkimhong.org/api/auth';
+  private apiUrl = 'http://localhost:3000/api/auth';
+  // private apiUrl = 'https://auth-api.rinkimhong.org/api/auth';
   private tokenKey = 'authToken';
   private userKey = 'currentUser';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
