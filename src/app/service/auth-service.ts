@@ -30,8 +30,9 @@ export interface LoginData {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  // private apiUrl = 'http://localhost:3000/api/auth';
 
+  private apiUrl = 'http://localhost:3000/api/auth';
   private tokenKey = 'authToken';
   private userKey = 'currentUser';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
@@ -49,11 +50,13 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
       tap((response) => {
         this.setToken(response.token);
-
+        // Don't store user with potentially large profileImage in localStorage
+        // Just store essential data
         const userForStorage = {
           id: response.user.id,
           username: response.user.username,
           email: response.user.email,
+          // Don't store profileImage in localStorage to avoid quota issues
         };
         this.setUser(userForStorage);
         this.currentUserSubject.next(response.user);
@@ -123,6 +126,8 @@ export class AuthService {
       .put<User>(`${this.apiUrl}/profile`, data, { headers })
       .pipe(
         tap((updatedUser) => {
+          // Don't store user with potentially large profileImage in localStorage
+          // Just update the BehaviorSubject
           this.currentUserSubject.next(updatedUser);
         })
       );
