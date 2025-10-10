@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService, User } from '../service/auth-service';
 import { CartService } from '../service/cart-service';
 import { CartItem } from '../models/cart-item';
@@ -49,7 +50,8 @@ export class Profile implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private cartService: CartService
+    private cartService: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -82,9 +84,20 @@ export class Profile implements OnInit, OnDestroy {
   }
 
   private loadUserOrders(userId: string) {
-    const ordersKey = `user_orders_${userId}`;
-    const orders = JSON.parse(localStorage.getItem(ordersKey) || '[]');
-    this.user.orders = orders;
+    this.authService.getUserOrders().subscribe({
+      next: (orders: any[]) => {
+        this.user.orders = orders.map((order) => ({
+          id: order._id,
+          item: order.items.map((i: any) => i.product.title).join(', '),
+          date: order.date,
+          status: order.status,
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading orders:', err);
+        this.user.orders = [];
+      },
+    });
   }
 
   private loadCartItemsAsWishlist() {
@@ -159,6 +172,10 @@ export class Profile implements OnInit, OnDestroy {
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+  }
+
+  viewOrder(order: Order): void {
+    this.router.navigate(['/download'], { queryParams: { orderId: order.id } });
   }
 
   getOrderStatusClass(status: string): string {

@@ -73,7 +73,12 @@
             <!-- Orders Tab -->
             <div *ngIf="activeTab === 'orders'" role="tabpanel">
               <h5 class="mb-4">Recent Orders</h5>
-              <div class="order-item p-3" *ngFor="let order of user.orders">
+              <div
+                class="order-item p-3"
+                *ngFor="let order of user.orders"
+                (click)="viewOrder(order)"
+                style="cursor: pointer"
+              >
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <h6 class="mb-1">{{ order.item }}</h6>

@@ -16,7 +16,6 @@ export class CartService {
   constructor(private authService: AuthService) {
     this.loadCartFromStorage();
 
-    // Subscribe to auth changes to load/save cart per user
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.loadCartFromStorage();
@@ -38,7 +37,7 @@ export class CartService {
     if (storedCart) {
       try {
         const items = JSON.parse(storedCart) as CartItem[];
-        // Filter out invalid items (quantity <= 0 or missing product)
+
         const validItems = items.filter(
           (item) => item.quantity > 0 && item.product && item.product.id > 0
         );
@@ -53,7 +52,6 @@ export class CartService {
   }
 
   private saveCartToStorage() {
-    // Filter out any invalid items before saving
     const validItems = this.cartItems.value.filter(
       (item) => item.quantity > 0 && item.product && item.product.id > 0
     );
@@ -61,14 +59,11 @@ export class CartService {
   }
 
   addToCart(product: Product, quantity: number = 1) {
-    // Check if user is authenticated
     if (!this.authService.isAuthenticated()) {
-      // Navigate directly to register page
       window.location.href = '/signup';
       return;
     }
 
-    // Validate input quantity
     const validQuantity = Math.floor(Math.max(1, quantity));
     if (quantity !== validQuantity) {
       Swal.fire({
@@ -86,7 +81,6 @@ export class CartService {
     );
 
     if (existingIndex > -1) {
-      // Product already exists, show error alert and stop
       Swal.fire({
         icon: 'error',
         title: 'This Product Already Added to Cart',
@@ -94,10 +88,9 @@ export class CartService {
         timer: 2500,
         showConfirmButton: false,
       });
-      return; // stop here
+      return;
     }
 
-    // Check stock availability
     if (validQuantity > product.stock) {
       Swal.fire({
         icon: 'error',
@@ -109,12 +102,10 @@ export class CartService {
       return;
     }
 
-    // Product not in cart and stock ok, add normally
     currentItems.push({ product, quantity: validQuantity });
     this.cartItems.next([...currentItems]);
     this.saveCartToStorage();
 
-    // Show success toast
     Swal.fire({
       icon: 'success',
       title: 'Added!',
@@ -158,7 +149,7 @@ export class CartService {
     }
 
     const item = currentItems[itemIndex];
-    const validQuantity = Math.floor(Math.max(0, quantity)); // Allow 0 to trigger removal
+    const validQuantity = Math.floor(Math.max(0, quantity));
 
     if (validQuantity > item.product.stock) {
       Swal.fire({
@@ -174,7 +165,6 @@ export class CartService {
     if (validQuantity <= 0) {
       this.removeFromCart(productId);
     } else {
-      // Only update if quantity actually changed
       if (validQuantity !== item.quantity) {
         currentItems[itemIndex] = { ...item, quantity: validQuantity };
         this.cartItems.next([...currentItems]);
