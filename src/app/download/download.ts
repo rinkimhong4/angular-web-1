@@ -32,18 +32,20 @@ export class Download implements OnInit {
 
     const orderId = this.activatedRoute.snapshot.queryParams['orderId'];
     if (orderId) {
-      this.authService.getOrderById(orderId).subscribe({
-        next: (order) => {
-          this.order = order;
-        },
-        error: (err) => {
-          console.error('Error fetching order:', err);
-          if (err.status === 401) {
-            this.router.navigate(['/signin']);
+      this.authService.getUserOrders().subscribe({
+        next: (orders) => {
+          const order = orders.find((o: any) => o._id === orderId);
+          if (order) {
+            this.order = order;
           } else {
-            Swal.fire('Error', 'Failed to load order.', 'error');
+            Swal.fire('Error', 'Order not found.', 'error');
             this.router.navigate(['/']);
           }
+        },
+        error: (err) => {
+          console.error('Error fetching orders:', err);
+          Swal.fire('Error', 'Failed to load order.', 'error');
+          this.router.navigate(['/']);
         },
       });
     } else {
