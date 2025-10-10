@@ -121,8 +121,14 @@
     class="text-center mb-4"
     *ngIf="!showAllProducts && filteredProducts.length > initialDisplayCount"
   >
-    <button class="btn btn-primary btn-lg" (click)="showMoreProducts()">
-      <i class="fas fa-plus-circle mr-2"></i>Show More Products
+    <button
+      class="btn btn-primary btn-lg"
+      (click)="showMoreProducts()"
+      [disabled]="isLoading"
+    >
+      <i *ngIf="!isLoading" class="fas fa-spinner mr-2"></i>
+      <i *ngIf="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
+      {{ isLoading ? "Loading..." : "Show More" }}
     </button>
   </div>
 

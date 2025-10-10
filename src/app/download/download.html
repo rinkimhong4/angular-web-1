@@ -1,0 +1,65 @@
+<div class="container my-5" NgIf="order">
+  <div class="card">
+    <div class="card-header bg-primary text-white text-center">
+      <h2>RinCommerce</h2>
+      <h4>Invoice</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Invoice Details</h5>
+          <p><strong>Invoice Number:</strong> {{ order.id }}</p>
+          <p><strong>Date:</strong> {{ order.date }}</p>
+          <p><strong>Payment Method:</strong> Credit Card</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Bill To:</h5>
+          <p><strong>Name:</strong> {{ order.customer.name }}</p>
+          <p><strong>Email:</strong> {{ order.customer.email }}</p>
+          <p><strong>Address:</strong> {{ order.customer.address }}</p>
+        </div>
+      </div>
+
+      <table class="table table-bordered mt-4">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of order.items">
+            <td>{{ item.product.title }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.product.price.toFixed(2) }}</td>
+            <td>${{ (item.product.price * item.quantity).toFixed(2) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="row">
+        <div class="col-md-6 offset-md-6">
+          <p><strong>Subtotal:</strong> ${{ order.total.toFixed(2) }}</p>
+          <p><strong>Tax:</strong> $0.00</p>
+          <p><strong>Grand Total:</strong> ${{ order.total.toFixed(2) }}</p>
+          <p><strong>Total in KHR:</strong> {{ order.total | usdToKhr }}</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-success" (click)="downloadPDF()">
+          Download PDF
+        </button>
+        <button class="btn btn-primary ml-2" (click)="goHome()">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+    <div class="card-footer text-center">
+      <p>Thank you for your business!</p>
+      <p>Kimhong Rin</p>
+    </div>
+  </div>
+</div>

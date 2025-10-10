@@ -30,6 +30,7 @@ export class Home implements OnInit {
   priceRange: { min: number; max: number } = { min: 0, max: 10000 };
   showAllProducts = false;
   initialDisplayCount = 8;
+  isLoading = false;
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -82,10 +83,15 @@ export class Home implements OnInit {
   }
 
   showMoreProducts() {
-    this.showAllProducts = true;
-    this.updateDisplayedProducts();
-  }
+    this.isLoading = true;
 
+    setTimeout(() => {
+      this.showAllProducts = true;
+      this.updateDisplayedProducts();
+
+      this.isLoading = false;
+    }, 200);
+  }
   onCategoryChange() {
     this.applyFilters();
   }

@@ -6,12 +6,14 @@ import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart-service';
 import { CartItem } from '../models/cart-item';
 import { AuthService } from '../service/auth-service';
+import { UsdToKhrPipe } from '../pipes/usd-to-khr-pipe';
 
 declare var Swal: any;
 
 interface Order {
   id: string;
-  item: string;
+  customer: any;
+  items: CartItem[];
   date: string;
   status: string;
   total: number;
@@ -19,7 +21,7 @@ interface Order {
 
 @Component({
   selector: 'app-checkout',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UsdToKhrPipe],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -88,7 +90,8 @@ export class Checkout implements OnInit, OnDestroy {
     // Create order object
     const order: Order = {
       id: this.orderId,
-      item: orderItems.map((item) => item.product.title).join(', '),
+      customer: { ...this.customer },
+      items: [...orderItems],
       date: new Date().toLocaleDateString(),
       status: 'processing',
       total: orderTotal,
@@ -121,5 +124,11 @@ export class Checkout implements OnInit, OnDestroy {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  downloadOrder() {
+    this.router.navigate(['/download'], {
+      queryParams: { orderId: this.orderId },
+    });
   }
 }
