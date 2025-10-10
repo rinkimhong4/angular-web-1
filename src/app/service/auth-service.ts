@@ -135,4 +135,23 @@ export class AuthService {
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/users`);
   }
+
+  getUserOrders(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<any[]>(`${this.apiUrl.replace('/auth', '/orders')}`, {
+      headers,
+    });
+  }
+
+  getOrderById(orderId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+    return this.http.get<any>(
+      `${this.apiUrl.replace('/auth', '/orders')}/${orderId}`,
+      { headers }
+    );
+  }
 }
